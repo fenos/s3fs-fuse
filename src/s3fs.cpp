@@ -5285,6 +5285,10 @@ static int my_fuse_opt_proc(void* data, const char* arg, int key, struct fuse_ar
             service_path = strchr(arg, '=') + sizeof(char);
             return 0;
         }
+        else if(is_prefix(arg, "s3path_prefix=")){
+            s3path_prefix = strchr(arg, '=') + sizeof(char);
+            return 0;
+        }
         else if(is_prefix(arg, "url=")){
             s3host = strchr(arg, '=') + sizeof(char);
             // strip the trailing '/', if any, off the end of the host

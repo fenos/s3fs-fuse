@@ -40,6 +40,7 @@ extern bool           complement_stat;
 extern bool           noxmlns;
 extern std::string    program_name;
 extern std::string    service_path;
+extern std::string    s3path_prefix;
 extern std::string    s3host;
 extern std::string    mount_prefix;
 extern std::string    endpoint;

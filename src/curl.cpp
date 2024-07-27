@@ -2873,6 +2873,8 @@ std::string S3fsCurl::CalcSignature(const std::string& method, const std::string
     StringCQ += get_sorted_header_keys(requestHeaders) + "\n";
     StringCQ += payload_hash;
 
+    S3FS_PRN_INFO3("Canonical Request %s", StringCQ.c_str());
+
     std::string   kSecret = "AWS4" + secret_access_key;
     unsigned int  kDate_len,kRegion_len, kService_len, kSigning_len = 0;
 
@@ -2903,6 +2905,7 @@ std::string S3fsCurl::CalcSignature(const std::string& method, const std::string
 void S3fsCurl::insertV4Headers(const std::string& access_key_id, const std::string& secret_access_key, const std::string& access_token)
 {
     std::string server_path = type == REQTYPE::LISTBUCKET ? "/" : path;
+
     std::string payload_hash;
     switch (type) {
         case REQTYPE::PUT:
@@ -2944,7 +2947,8 @@ void S3fsCurl::insertV4Headers(const std::string& access_key_id, const std::stri
     get_date_sigv3(strdate, date8601);
 
     std::string contentSHA256 = payload_hash.empty() ? EMPTY_PAYLOAD_HASH : payload_hash;
-    const std::string realpath = pathrequeststyle ? "/" + S3fsCred::GetBucket() + server_path : server_path;
+    const std::string prefix = s3path_prefix.empty() ? "/" : s3path_prefix;
+    const std::string realpath = pathrequeststyle ? prefix + S3fsCred::GetBucket() + server_path : server_path;
 
     //string canonical_headers, signed_headers;
     requestHeaders = curl_slist_sort_insert(requestHeaders, "host", get_bucket_host().c_str());
